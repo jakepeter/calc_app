@@ -2,70 +2,63 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>問題 {{ current }} / {{ total }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>問題 {{ current }} / {{ total }}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    html, body {
-      margin: 0; padding: 0; height: 100vh; overflow: hidden;
-    }
     body {
-      background: #f8f9fa;
+      touch-action: manipulation;
     }
-    .container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transform-origin: top center;
-      transform: scale(0.85); /* 縮小率 調整可能 */
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 10px;
+    input[type="number"] {
+      font-size: 16px; /* iOS Safariの自動ズーム防止 */
     }
     .keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
     }
     .keypad button {
-      font-size: 1.5rem;
-      padding: 12px;
-      height: 70px;
+      font-size: 1.8rem;
+      padding: 15px;
+      height: 80px;  /* 高さを統一 */
     }
     .submit-button {
       font-size: 1.2rem;
-      margin: 20px 0;
-      height: 60px;
-      width: 100%;
+      margin: 20px 0; /* 上下の余白を広げる */
+      height: 60px;    /* 高さも設定（任意） */
     }
-    input#userAnswer {
-      font-size: 1.5rem;
-      text-align: center;
+    /* 正解・不正解メッセージ用の余白確保 */
+    .result-message {
+      min-height: 3rem; /* メッセージがないときも余白を確保 */
     }
   </style>
 </head>
-<body>
-  <div class="container text-center fs-4">
-    {% if result %}
-      {% if '不正解' in result %}
-        <div class="alert alert-warning">{{ result }}</div>
-      {% else %}
-        <div class="alert alert-info">{{ result }}</div>
+<body class="d-flex justify-content-center align-items-center vh-100">
+  <div class="text-center fs-4" style="width: 100%; max-width: 400px;">
+
+    <div class="result-message">
+      {% if result %}
+        {% if '不正解' in result %}
+          <div class="alert alert-warning">{{ result }}</div>
+        {% else %}
+          <div class="alert alert-info">{{ result }}</div>
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </div>
 
     <h1>問題 {{ current }} / {{ total }}</h1>
     <p class="text-primary my-4">{{ num1 }} {{ symbol }} {{ num2 }} = ?</p>
 
     <form id="answerForm" action="{{ url_for('check_answer') }}" method="post">
       <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-      <input type="number" name="user_answer" id="userAnswer" autofocus required class="form-control mb-3" style="font-size:1.5rem;">
-      
-      <button type="submit" class="btn btn-primary submit-button">答える</button>
+      <input type="number" name="user_answer" id="userAnswer" autofocus required class="form-control mb-3 text-center" style="font-size: 1.5rem;">
 
+      <!-- 答えるボタンを上に配置 -->
+      <button type="submit" class="btn btn-primary w-100 submit-button">答える</button>
+
+      <!-- テンキー -->
       <div class="keypad">
         {% for i in range(1, 10) %}
           <button type="button" class="btn btn-secondary" onclick="appendNumber('{{ i }}')">{{ i }}</button>
