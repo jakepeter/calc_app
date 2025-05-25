@@ -2,35 +2,53 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>問題 {{ current }} / {{ total }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
+    html, body {
+      margin: 0; padding: 0; height: 100vh; overflow: hidden;
+    }
     body {
-      padding-top: 20px;
-      padding-bottom: 100px; /* スマホの下部UIに被らないように */
+      background: #f8f9fa;
+    }
+    .container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transform-origin: top center;
+      transform: scale(0.85); /* 縮小率 調整可能 */
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 10px;
     }
     .keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      max-width: 300px;
-      margin: 20px auto;
+      width: 100%;
     }
     .keypad button {
-      font-size: 1.8rem;
-      padding: 15px;
-      height: 80px;
+      font-size: 1.5rem;
+      padding: 12px;
+      height: 70px;
     }
     .submit-button {
       font-size: 1.2rem;
       margin: 20px 0;
       height: 60px;
+      width: 100%;
+    }
+    input#userAnswer {
+      font-size: 1.5rem;
+      text-align: center;
     }
   </style>
 </head>
-<body class="overflow-auto">
-  <div class="text-center fs-4 mx-auto" style="width: 100%; max-width: 400px;">
+<body>
+  <div class="container text-center fs-4">
     {% if result %}
       {% if '不正解' in result %}
         <div class="alert alert-warning">{{ result }}</div>
@@ -44,9 +62,9 @@
 
     <form id="answerForm" action="{{ url_for('check_answer') }}" method="post">
       <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-      <input type="number" name="user_answer" id="userAnswer" autofocus required class="form-control mb-3 text-center" style="font-size: 1.5rem;">
-
-      <button type="submit" class="btn btn-primary w-100 submit-button">答える</button>
+      <input type="number" name="user_answer" id="userAnswer" autofocus required class="form-control mb-3" style="font-size:1.5rem;">
+      
+      <button type="submit" class="btn btn-primary submit-button">答える</button>
 
       <div class="keypad">
         {% for i in range(1, 10) %}
