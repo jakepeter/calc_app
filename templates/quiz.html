@@ -10,7 +10,7 @@
       touch-action: manipulation;
     }
     input[type="number"] {
-      font-size: 16px; /* iOS Safariの自動ズーム防止 */
+      font-size: 16px;
     }
     .keypad {
       display: grid;
@@ -59,9 +59,10 @@
         {% for i in range(1, 10) %}
           <button type="button" class="btn btn-secondary" onclick="appendNumber('{{ i }}')">{{ i }}</button>
         {% endfor %}
-        <button type="button" class="btn btn-warning" onclick="backspace()">←</button>
-        <button type="button" class="btn btn-secondary" onclick="appendNumber('0')">0</button>
+        <!-- 最下段：左 = クリア / 中央 = 0 / 右 = 答える -->
         <button type="button" class="btn btn-danger" onclick="clearInput()">C</button>
+        <button type="button" class="btn btn-secondary" onclick="appendNumber('0')">0</button>
+        <button type="button" class="btn btn-success" onclick="submitAnswer()">答える</button>
       </div>
     </form>
 
@@ -84,10 +85,14 @@
       input.value = '';
     }
 
+    function submitAnswer() {
+      document.getElementById('answerForm').submit();
+    }
+
     input.addEventListener('keypress', function(event) {
       if (event.key === 'Enter') {
         event.preventDefault();
-        document.getElementById('answerForm').submit();
+        submitAnswer();
       }
     });
   </script>
